@@ -14,7 +14,7 @@
  */
 
 class CleanerRobot {
-  static MAX_ENERGY_CAPACITY = 100; /* Максимальная ёмкость батареи. */
+  static MAX_ENERGY_CAPACITY = 100;
 
   #energy = null;
 
