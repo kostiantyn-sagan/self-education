@@ -27,36 +27,27 @@
 /* Мой код начало */
 
 function calculateAdvanced(...functions) {
-  const results = [];
-  const errors = [];
+  return functions.reduce(
+    ({ value, errors }, fn, idx) => {
+      try {
+        checkCallback(fn, idx);
+        value = fn(value);
+      } catch (e) {
+        errors.push({ index: idx, name: e.name, message: e.message });
+      }
 
-  const initial = (idx, fn, arg) => {
-    try {
-      checkCallback(fn);
-
-      const result = idx === 0 ? fn() : fn(arg);
-
-      if (result === undefined)
-        throw new Error(`callback at index ${idx} did not return any value.`);
-
-      results.push(result);
-    } catch (e) {
-      errors.push({ index: idx, name: e.name, message: e.message });
-    }
-  };
-
-  return functions.reduce((result, fn, idx) => {
-    const successfulCallbackResult = results[results.length - 1];
-
-    idx === 0 ? initial(idx, fn) : initial(idx, fn, successfulCallbackResult);
-
-    return { ...result, value: results[results.length - 1], errors };
-  }, {});
+      return { value, errors };
+    },
+    { value: null, errors: [] },
+  );
 }
 
-function checkCallback(callback) {
+function checkCallback(callback, idx) {
   if (typeof callback !== 'function')
     throw new Error('The argument to calculateAdvanced () is not a function');
+
+  if (callback() === undefined)
+    throw new Error(`callback at index ${idx} did not return any value.`);
 }
 
 /* Мой код конец*/

@@ -29,7 +29,6 @@ function createFibonacciGenerator() {
 
     beforeLastFibonacciNum = lastFibonacciNum;
     lastFibonacciNum = fibonacciNum;
-    i += 1;
 
     return fibonacciNum;
   };

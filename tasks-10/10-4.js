@@ -30,23 +30,17 @@
 
 /* Мой код начало */
 
-const compose =
-  (...functions) =>
-  initialParam => {
-    let callbackIdx = functions.length - 1;
+const compose = (...functions) => initialParam =>
+  functions.reduceRight((result, fn) => {
+    if (typeof fn !== 'function') throw new Error(`${fn} is not a function`);
 
-    return functions.reduce((result, fn, idx, functions) => {
-      if (idx === 0) {
-        result = functions[callbackIdx](initialParam);
-        callbackIdx -= 1;
-        return result;
-      }
+    result = fn(result);
 
-      result = functions[callbackIdx](result);
-      callbackIdx -= 1;
-      return result;
-    }, null);
-  };
+    if (result === undefined)
+      throw new Error(`Function ${fn} did not return value`);
+
+    return result;
+  }, initialParam);
 
 /* Мой код конец */
 

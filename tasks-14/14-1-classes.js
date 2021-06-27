@@ -17,49 +17,50 @@
  * - идентификатор таймера нужно хранить в приватной переменной конструктора.
  */
 
-function CleanerRobot(
-  initialEnergy = 0 /* Изначальный заряд батареи робота */,
-  cleaningSquare /* Площадь для уборки в метрах. */,
-) {
-  let energy = initialEnergy;
-  let timerId = 0;
-  const ENERGY_CONSUMPTION = 1; /* Расход энергии: 1% батареи на 1 час работы. */
-  const CLEANING_SPEED = 10; /* Скорость уборки: 10 квадратных метров в час. */
-  const getCleaningTime = () => cleaningSquare / CLEANING_SPEED;
-  const onReady = () =>
-    console.log(`Уборка завершена. Осталось заряда батареи: ${energy}.`);
+/* Мой код начало */
 
-  this.clean = () => {
-    const cleaningTime = getCleaningTime();
+class CleanerRobot {
+  static ENERGY_CONSUMPTION = 1; /* Расход энергии: 1% батареи на 1 час работы. */
+  static CLEANING_SPEED = 10; /* Скорость уборки: 10 квадратных метров в час. */
 
+  #timerId = 0;
+
+  constructor(initialEnergy = 0, cleaningSquare) {
+    this.energy = initialEnergy;
+    this.cleaningSquare = cleaningSquare;
+  }
+
+  clean = () => {
+    this.calculateEnergyConsumption();
+    const cleaningTime = this.getCleaningTime();
     console.log(`Начинаю процесс уборки. Время уборки: ${cleaningTime} часов.`);
 
     /* Для удобства время уборки сокращено до формата 1 час = 1 секунда */
-    timerId = setTimeout(onReady, cleaningTime * 1000);
+    this.#timerId = setTimeout(this.onReady.bind(this), cleaningTime * 1000);
   };
 
-  // Решение
-
-  /* Мой код начало */
-
-  if (cleaningSquare > 0) calculateEnergyConsumption();
-
-  function calculateEnergyConsumption() {
-    const cleaningTime = getCleaningTime();
-
-    energy -= ENERGY_CONSUMPTION * cleaningTime;
-  }
-
-  this.stop = () => {
-    clearTimeout(timerId);
+  stop = () => {
+    clearTimeout(this.#timerId);
 
     console.log(
-      `Уборка завершена досрочно. Осталось заряда батареи: ${energy}.`,
+      `Уборка завершена досрочно. Осталось заряда батареи: ${this.energy}.`,
     );
   };
 
-  /* Мой код конец */
+  getCleaningTime() {
+    return this.cleaningSquare / CleanerRobot.CLEANING_SPEED;
+  }
+
+  onReady() {
+    console.log(`Уборка завершена. Осталось заряда батареи: ${this.energy}.`);
+  }
+
+  calculateEnergyConsumption() {
+    this.energy -= CleanerRobot.ENERGY_CONSUMPTION * this.getCleaningTime();
+  }
 }
+
+/* Мой код конец */
 
 const cleanerRobot = new CleanerRobot(50, 45);
 
